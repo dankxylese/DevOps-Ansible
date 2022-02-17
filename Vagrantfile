@@ -17,7 +17,8 @@
        controller.vm.hostname = 'controller'
        
        controller.vm.network :private_network, ip: "192.168.56.12"
-       
+       #controller.vm.synced_folder "code", "/home/vagrant"
+
        # config.hostsupdater.aliases = ["development.controller"] 
        
       end 
@@ -32,7 +33,7 @@
         
         web.vm.network :private_network, ip: "192.168.56.10"
         #   assigning private IP
-        
+
         #config.hostsupdater.aliases = ["development.web"]
         # creating a link called development.web so we can access web page with this link instread of an IP   
             

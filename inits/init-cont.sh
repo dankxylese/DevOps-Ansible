@@ -25,3 +25,8 @@ echo -e "[web] \n192.168.56.10 ansible_connection=ssh ansible_ssh_user=vagrant a
 ansible web -a "<linux command goes here>" #send/run commands over ansible to other machines
 ansible web -a "uname -a"
 ansible all -a "uname -a"
+
+
+#---------------
+#Copying /code/ folder bc folder linking in vagrant isn't working
+#scp -i /home/manse/Sparta/103-Ansible/.vagrant/machines/controller/virtualbox/private_key -r code vagrant@192.168.56.10:~ 
