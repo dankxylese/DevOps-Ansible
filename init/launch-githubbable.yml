@@ -1,0 +1,52 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: yes
+  vars:
+    key_name: eng103a
+    region: eu-west-1
+    image: ami-07d8796a2b0f8d29c
+    id: "eng103a_vlad_ansible_instance"
+    sec_group: "{{ id }}-sec"
+  tasks:
+    - name: Provisioning EC2 instances
+      block:
+      - name: Upload public key to AWS
+        ec2_key:
+          name: "{{ key_name }}"
+          key_material: "{{ lookup('file', '/home/vagrant/.ssh/eng103a.pub') }}"
+          region: "{{ region }}"
+          aws_access_key: ""
+          aws_secret_key: ""
+      - name: Create security group
+        tags: create_ec2
+        ec2_group:
+          name: "{{ sec_group }}"
+          description: "Sec group for app {{ id }}"
+          region: "{{ region }}"
+          aws_access_key: ""
+          aws_secret_key: ""
+          rules:
+            - proto: tcp
+              ports:
+                - 22
+              cidr_ip: 0.0.0.0/0
+              rule_desc: allow all on ssh port
+        register: result_sec_group
+      - name: Provision instance(s)
+        ec2:
+          aws_access_key: ""
+          aws_secret_key: ""
+          key_name: "{{ key_name }}"
+          id: "{{ id }}"
+          group_id: "{{ result_sec_group.group_id }}"
+          image: "{{ image }}"
+          instance_type: t2.micro
+          region: "{{ region }}"
+          wait: true
+          count: 1
+      tags: ['never', 'create_ec2']
+
+
+
+
